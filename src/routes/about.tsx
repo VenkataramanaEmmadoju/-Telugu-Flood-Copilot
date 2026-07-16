@@ -139,12 +139,12 @@ const AI_WORKFLOW: { label: string; icon: LucideIcon; note: string }[] = [
 ];
 
 const TEAM: { name: string; role: string; initials: string; tone: string }[] = [
-  { name: "Venkataramana Emmadoju", role: "Founder & AI Engineer", initials: "VE", tone: "from-primary to-primary-glow" },
-  { name: "Ananya Reddy", role: "Product & Field Research", initials: "AR", tone: "from-info to-primary" },
-  { name: "Karthik Naidu", role: "Full-stack Engineer", initials: "KN", tone: "from-success to-info" },
-  { name: "Sravani Yadav", role: "Telugu Language & UX", initials: "SY", tone: "from-warning to-destructive" },
-  { name: "Ravi Kumar", role: "GIS & Data Partnerships", initials: "RK", tone: "from-primary to-destructive" },
-  { name: "Priya Latha", role: "Community Volunteer Lead", initials: "PL", tone: "from-info to-success" },
+  {
+    name: "Venkataramana Emmadoju",
+    role: "Founder & AI Engineer",
+    initials: "VE",
+    tone: "from-primary to-primary-glow",
+  },
 ];
 
 function AboutPage() {
@@ -323,27 +323,31 @@ function AboutPage() {
         </div>
       </Section>
 
-      {/* Team */}
-      <Section eyebrow="Team" title="Meet the people behind the copilot" icon={Users}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Founder */}
+      <Section eyebrow="Founder" title="Meet the person behind the copilot" icon={Users}>
+        <div className="grid gap-4 sm:grid-cols-2 lg:max-w-2xl">
           {TEAM.map((m) => (
-            <div
+            <motion.div
               key={m.name}
-              className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)]"
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.35 }}
+              className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)]"
             >
               <div
                 className={cn(
-                  "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br text-lg font-bold text-primary-foreground",
+                  "flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br text-lg font-bold text-primary-foreground",
                   m.tone,
                 )}
               >
                 {m.initials}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">{m.name}</p>
-                <p className="text-xs text-muted-foreground">{m.role}</p>
+                <p className="truncate text-base font-semibold text-foreground">{m.name}</p>
+                <p className="text-sm text-muted-foreground">{m.role}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </Section>
