@@ -59,6 +59,8 @@ type Alert = {
   river?: string;
 };
 
+// TODO: Replace static seed with data from GET /alerts (query params: district, severity).
+//       Wire via TanStack Query useSuspenseQuery once the endpoint ships.
 const ALERTS: Alert[] = [
   {
     id: "AL-2026-0714-01",
