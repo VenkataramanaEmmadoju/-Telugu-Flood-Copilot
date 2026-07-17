@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Languages,
   Palette,
@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useLanguage, type Lang } from "@/lib/language-context";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/settings")({
@@ -52,14 +53,14 @@ export const Route = createFileRoute("/settings")({
 
 type ThemeChoice = "light" | "dark" | "system";
 
-const LANGUAGES = [
+const LANGUAGES: { code: Lang; label: string; native: string }[] = [
   { code: "en", label: "English", native: "English" },
   { code: "te", label: "Telugu", native: "తెలుగు" },
   { code: "hi", label: "Hindi", native: "हिन्दी" },
 ];
 
 function SettingsPage() {
-  const [language, setLanguage] = useState("en");
+  const { lang, setLang, t } = useLanguage();
   const [theme, setTheme] = useState<ThemeChoice>("system");
 
   // Notifications
@@ -70,13 +71,11 @@ function SettingsPage() {
   const [vibration, setVibration] = useState(true);
   const [smsFallback, setSmsFallback] = useState(true);
 
-  // Load persisted settings
+  // Load persisted theme
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const l = localStorage.getItem("tfc.language");
-    if (l) setLanguage(l);
-    const t = localStorage.getItem("tfc.theme") as ThemeChoice | null;
-    if (t) setTheme(t);
+    const saved = localStorage.getItem("tfc.theme") as ThemeChoice | null;
+    if (saved) setTheme(saved);
   }, []);
 
   // Persist + apply theme
@@ -89,34 +88,30 @@ function SettingsPage() {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [theme]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem("tfc.language", language);
-  }, [language]);
-
-  const currentLang = useMemo(
-    () => LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0],
-    [language],
-  );
+  const currentLang = LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[0];
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader
-        eyebrow="Preferences"
-        title="Settings"
-        description="Personalise language, appearance, offline cache and alert channels. Everything is stored on this device."
+        eyebrow={t("settings.eyebrow")}
+        title={t("settings.title")}
+        description={t("settings.description")}
       />
 
       {/* Language */}
-      <SettingsSection icon={Languages} title="Language" description="Choose your preferred language for the app and voice prompts.">
+      <SettingsSection
+        icon={Languages}
+        title={t("settings.language")}
+        description={t("settings.languageDesc")}
+      >
         <div className="grid gap-3 sm:grid-cols-3">
           {LANGUAGES.map((l) => {
-            const active = l.code === language;
+            const active = l.code === lang;
             return (
               <button
                 key={l.code}
                 type="button"
-                onClick={() => setLanguage(l.code)}
+                onClick={() => setLang(l.code)}
                 className={cn(
                   "flex flex-col items-start gap-1 rounded-2xl border p-4 text-left transition-all",
                   active
@@ -134,25 +129,30 @@ function SettingsPage() {
           })}
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Currently displaying in <span className="font-medium text-foreground">{currentLang.native}</span>. UI translation for Telugu/Hindi coming soon.
+          {t("settings.currentlyIn")}{" "}
+          <span className="font-medium text-foreground">{currentLang.native}</span>.
         </p>
       </SettingsSection>
 
       {/* Theme */}
-      <SettingsSection icon={Palette} title="Theme" description="Match the app to your environment. System follows your device setting.">
+      <SettingsSection
+        icon={Palette}
+        title={t("settings.theme")}
+        description={t("settings.themeDesc")}
+      >
         <div className="grid gap-3 sm:grid-cols-3">
           {([
-            { key: "light", label: "Light", icon: Sun, hint: "Bright and clear" },
-            { key: "dark", label: "Dark", icon: Moon, hint: "Easier at night" },
-            { key: "system", label: "System", icon: Monitor, hint: "Follow device" },
-          ] as { key: ThemeChoice; label: string; icon: LucideIcon; hint: string }[]).map((t) => {
-            const Icon = t.icon;
-            const active = theme === t.key;
+            { key: "light" as ThemeChoice, labelKey: "settings.light", hintKey: "settings.lightHint", icon: Sun },
+            { key: "dark" as ThemeChoice, labelKey: "settings.dark", hintKey: "settings.darkHint", icon: Moon },
+            { key: "system" as ThemeChoice, labelKey: "settings.system", hintKey: "settings.systemHint", icon: Monitor },
+          ]).map((item) => {
+            const Icon = item.icon;
+            const active = theme === item.key;
             return (
               <button
-                key={t.key}
+                key={item.key}
                 type="button"
-                onClick={() => setTheme(t.key)}
+                onClick={() => setTheme(item.key)}
                 className={cn(
                   "flex items-start gap-3 rounded-2xl border p-4 text-left transition-all",
                   active
@@ -165,10 +165,10 @@ function SettingsPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold">{t.label}</span>
+                    <span className="text-sm font-semibold">{t(item.labelKey)}</span>
                     {active && <CheckCircle2 className="h-4 w-4 text-primary" />}
                   </div>
-                  <p className="text-xs text-muted-foreground">{t.hint}</p>
+                  <p className="text-xs text-muted-foreground">{t(item.hintKey)}</p>
                 </div>
               </button>
             );
@@ -177,7 +177,11 @@ function SettingsPage() {
       </SettingsSection>
 
       {/* Offline status */}
-      <SettingsSection icon={WifiOff} title="Offline status" description="What's cached on this device and ready to work without network.">
+      <SettingsSection
+        icon={WifiOff}
+        title={t("settings.offline")}
+        description={t("settings.offlineDesc")}
+      >
         <div className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -185,13 +189,13 @@ function SettingsPage() {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold">Ready for offline emergencies</p>
-                <p className="text-xs text-muted-foreground">Last synced 12 minutes ago</p>
+                <p className="text-sm font-semibold">{t("settings.readyOffline")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.lastSynced")}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" className="gap-2">
               <RefreshCw className="h-4 w-4" />
-              Sync now
+              {t("settings.syncNow")}
             </Button>
           </div>
 
@@ -205,55 +209,59 @@ function SettingsPage() {
       </SettingsSection>
 
       {/* Notifications */}
-      <SettingsSection icon={Bell} title="Notification preferences" description="Choose which alerts you receive and how they're delivered.">
+      <SettingsSection
+        icon={Bell}
+        title={t("settings.notifications")}
+        description={t("settings.notificationsDesc")}
+      >
         <div className="divide-y divide-border rounded-2xl border border-border bg-card shadow-[var(--shadow-soft)]">
           <ToggleRow
             icon={AlertTriangle}
-            title="Critical flood alerts"
-            description="Life-threatening bulletins from IMD, CWC, and district control rooms. Recommended."
+            title={t("settings.criticalAlerts")}
+            description={t("settings.criticalAlertsDesc")}
             tone="danger"
             checked={criticalAlerts}
             onCheckedChange={setCriticalAlerts}
           />
           <ToggleRow
             icon={Bell}
-            title="Daily weather bulletin"
-            description="One summary each morning covering the next 24 hours."
+            title={t("settings.dailyBulletin")}
+            description={t("settings.dailyBulletinDesc")}
             checked={dailyBulletin}
             onCheckedChange={setDailyBulletin}
           />
           <ToggleRow
             icon={MapPinned}
-            title="Nearby shelter updates"
-            description="Notify when shelters near you open, fill up, or close."
+            title={t("settings.shelterUpdates")}
+            description={t("settings.shelterUpdatesDesc")}
             checked={shelterUpdates}
             onCheckedChange={setShelterUpdates}
           />
           <div className="p-4">
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Delivery
+              {t("settings.delivery")}
             </p>
             <div className="mt-2 divide-y divide-border rounded-xl border border-border">
               <ToggleRow
                 icon={Volume2}
-                title="Voice announcements"
-                description="Read alerts aloud in Telugu when the phone is idle."
+                title={t("settings.voiceAnnouncements")}
+                description={t("settings.voiceAnnouncementsDesc")}
                 checked={voiceAnnouncements}
                 onCheckedChange={setVoiceAnnouncements}
                 compact
               />
               <ToggleRow
                 icon={Vibrate}
-                title="Vibration"
-                description="Vibrate for critical alerts even in silent mode."
+                title={t("settings.vibration")}
+                description={t("settings.vibrationDesc")}
                 checked={vibration}
                 onCheckedChange={setVibration}
                 compact
               />
               <ToggleRow
                 icon={MessageSquare}
-                title="SMS fallback"
-                description="Send alerts by SMS when the device is offline."
+                title={t("settings.smsFallback")}
+                description={t("settings.smsFallbackDesc")}
                 checked={smsFallback}
                 onCheckedChange={setSmsFallback}
                 compact
@@ -263,17 +271,15 @@ function SettingsPage() {
 
           <div className="flex items-center justify-between gap-3 p-4">
             <div>
-              <p className="text-sm font-semibold">Quiet hours</p>
-              <p className="text-xs text-muted-foreground">
-                Non-critical alerts are silenced during this window. Critical alerts always ring.
-              </p>
+              <p className="text-sm font-semibold">{t("settings.quietHours")}</p>
+              <p className="text-xs text-muted-foreground">{t("settings.quietHoursDesc")}</p>
             </div>
             <Select defaultValue="none">
               <SelectTrigger className="w-40">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Off</SelectItem>
+                <SelectItem value="none">{t("settings.quietOff")}</SelectItem>
                 <SelectItem value="night">22:00 – 06:00</SelectItem>
                 <SelectItem value="work">09:00 – 17:00</SelectItem>
               </SelectContent>
@@ -283,7 +289,11 @@ function SettingsPage() {
       </SettingsSection>
 
       {/* Application version */}
-      <SettingsSection icon={Info} title="Application version" description="Build and update information for this installation.">
+      <SettingsSection
+        icon={Info}
+        title={t("settings.appVersion")}
+        description={t("settings.appVersionDesc")}
+      >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <InfoTile label="Version" value="1.4.0" />
           <InfoTile label="Build" value="2026.07.16" />
@@ -294,19 +304,23 @@ function SettingsPage() {
           <div className="flex items-center gap-3">
             <StatusBadge variant="success">
               <CheckCircle2 className="h-3 w-3" />
-              Up to date
+              {t("settings.upToDate")}
             </StatusBadge>
-            <span className="text-xs text-muted-foreground">Last checked just now</span>
+            <span className="text-xs text-muted-foreground">{t("settings.lastSynced")}</span>
           </div>
           <Button variant="outline" size="sm" className="gap-2">
             <RefreshCw className="h-4 w-4" />
-            Check for updates
+            {t("settings.checkUpdates")}
           </Button>
         </div>
       </SettingsSection>
 
       {/* About */}
-      <SettingsSection icon={Waves} title="About the app" description="Telugu Flood Copilot is an offline-first AI decision support system for rural Telangana.">
+      <SettingsSection
+        icon={Waves}
+        title={t("settings.about")}
+        description={t("settings.aboutDesc")}
+      >
         <div className="rounded-2xl border border-border bg-gradient-to-br from-primary/10 via-background to-background p-5 shadow-[var(--shadow-soft)]">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="max-w-xl">
@@ -324,7 +338,7 @@ function SettingsPage() {
                 className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium hover:border-primary/40 hover:text-primary"
               >
                 <Info className="h-4 w-4" />
-                Learn more
+                {t("settings.learnMore")}
               </a>
               <a
                 href="https://github.com/VenkataramanaEmmadoju/Telugu-Flood-Copilot"
@@ -340,7 +354,7 @@ function SettingsPage() {
                 className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium hover:border-primary/40 hover:text-primary"
               >
                 <Mail className="h-4 w-4" />
-                Contact
+                {t("settings.contact")}
               </a>
             </div>
           </div>
