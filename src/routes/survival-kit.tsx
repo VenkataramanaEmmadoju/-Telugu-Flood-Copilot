@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/survival-kit")({
   head: () => ({
     meta: [
-      { title: "Offline Survival Kit — Telugu Flood Copilot" },
+      { title: "Offline Survival Kit — Flood Copilot" },
       {
         name: "description",
         content:

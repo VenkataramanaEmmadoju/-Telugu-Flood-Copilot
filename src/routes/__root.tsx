@@ -80,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Telugu Flood Copilot — Offline AI Decision Support for Rural Telangana" },
+      { title: "Flood Copilot — AI-Powered Flood Copilot with Offline Emergency Support for Rural Telangana" },
       {
         name: "description",
         content:
           "Offline-first AI copilot helping citizens of rural Telangana report floods, reach 112, and find nearby shelters using voice, text, and images.",
       },
       { name: "theme-color", content: "#2563EB" },
-      { property: "og:title", content: "Telugu Flood Copilot" },
+      { property: "og:title", content: "Flood Copilot" },
       {
         property: "og:description",
         content: "Offline AI decision support for flood emergencies in rural Telangana.",

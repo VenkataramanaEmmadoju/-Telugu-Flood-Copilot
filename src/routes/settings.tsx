@@ -40,11 +40,11 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Telugu Flood Copilot" },
+      { title: "Settings — Flood Copilot" },
       {
         name: "description",
         content:
-          "Language, theme, offline cache, notifications and app information for Telugu Flood Copilot.",
+          "Language, theme, offline cache, notifications and app information for Flood Copilot.",
       },
     ],
   }),
@@ -329,7 +329,7 @@ function SettingsPage() {
                 and designed to work when the network doesn't.
               </p>
               <p className="mt-2 text-xs text-muted-foreground">
-                © {new Date().getFullYear()} Telugu Flood Copilot · MIT Licensed
+                © {new Date().getFullYear()} Flood Copilot · MIT Licensed
               </p>
             </div>
             <div className="flex flex-wrap gap-2">

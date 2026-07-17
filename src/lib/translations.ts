@@ -35,8 +35,8 @@ const T: Record<Lang, Record<string, string>> = {
 
     // ── Home ──────────────────────────────────────────────────────────────
     "home.eyebrow": "Emergency Support",
-    "home.title": "Telugu Flood Copilot",
-    "home.subtitle": "Offline AI Decision Support for Rural Telangana",
+    "home.title": "Flood Copilot",
+    "home.subtitle": "AI-Powered Flood Copilot with Offline Emergency Support for Rural Telangana",
     "home.description":
       "Helping citizens communicate faster with 112 and local responders using voice, text, and images — even in low-connectivity environments.",
     "home.reportEmergency": "Report Emergency",
@@ -202,7 +202,7 @@ const T: Record<Lang, Record<string, string>> = {
     "settings.checkUpdates": "Check for updates",
     "settings.upToDate": "Up to date",
     "settings.about": "About the app",
-    "settings.aboutDesc": "Telugu Flood Copilot is an offline-first AI decision support system for rural Telangana.",
+    "settings.aboutDesc": "Flood Copilot is an offline-first AI decision support system for rural Telangana.",
     "settings.learnMore": "Learn more",
     "settings.contact": "Contact",
 
@@ -218,12 +218,17 @@ const T: Record<Lang, Record<string, string>> = {
     "home.readBulletin": "Read bulletin",
     "home.dial112": "Dial 112",
     "home.alert": "Alert",
+    "home.nearestShelter": "Nearest Shelter",
+    "home.currentAlert": "Current Alert",
+    "home.emergencyContacts": "Emergency Contacts",
+    "home.offlineStatus": "Offline Status",
+    "home.floodSafetyTips": "Flood Safety Tips",
 
     // About
     "about.publicInterest": "Public interest project",
     "about.openSource": "Open source",
     "about.heroTitle": "An offline-first AI copilot for flood response in rural Telangana.",
-    "about.heroDesc": "Telugu Flood Copilot helps citizens reach 112, locate shelters, and understand government advisories in Telugu — even when the network is down.",
+    "about.heroDesc": "Flood Copilot helps citizens reach 112, locate shelters, and understand government advisories in Telugu — even when the network is down.",
     "about.missionEyebrow": "Mission",
     "about.missionTitle": "Save minutes. Save lives.",
     "about.missionP1": "When the Godavari or Musi rises, the difference between rescue and tragedy is often a single phone call. Our mission is to shrink that call to under 60 seconds — regardless of the caller's literacy, language, or signal strength.",
@@ -394,7 +399,7 @@ const T: Record<Lang, Record<string, string>> = {
     "common.noConnection": "డేటా లోడ్ చేయడం సాధ్యపడలేదు. కనెక్షన్ తనిఖీ చేయండి.",
 
     "home.eyebrow": "అత్యవసర మద్దతు",
-    "home.title": "తెలుగు ఫ్లడ్ కోపైలట్",
+    "home.title": "ఫ్లడ్ కోపైలట్",
     "home.subtitle": "గ్రామీణ తెలంగాణకు ఆఫ్‌లైన్ AI నిర్ణయ మద్దతు",
     "home.description":
       "వాయిస్, టెక్స్ట్ మరియు చిత్రాల ద్వారా పౌరులు 112 మరియు స్థానిక సహాయకులతో వేగంగా సంప్రదించడంలో సహాయం చేస్తోంది.",
@@ -567,6 +572,11 @@ const T: Record<Lang, Record<string, string>> = {
     "home.readBulletin": "బులెటిన్ చదవండి",
     "home.dial112": "112 డయల్ చేయండి",
     "home.alert": "అలర్ట్",
+    "home.nearestShelter": "సమీప ఆశ్రయం",
+    "home.currentAlert": "ప్రస్తుత హెచ్చరిక",
+    "home.emergencyContacts": "అత్యవసర సంప్రదింపులు",
+    "home.offlineStatus": "ఆఫ్‌లైన్ స్థితి",
+    "home.floodSafetyTips": "వరద భద్రతా చిట్కాలు",
 
     // About
     "about.publicInterest": "ప్రజా ప్రయోజన ప్రాజెక్ట్",
@@ -743,8 +753,8 @@ const T: Record<Lang, Record<string, string>> = {
     "common.noConnection": "डेटा लोड नहीं हो सका। कनेक्शन जांचें।",
 
     "home.eyebrow": "आपातकाल समर्थन",
-    "home.title": "तेलुगु फ्लड कोपायलट",
-    "home.subtitle": "ग्रामीण तेलंगाना के लिए ऑफलाइन AI निर्णय समर्थन",
+    "home.title": "फ्लड कोपायलट",
+    "home.subtitle": "ग्रामीण तेलंगाना के लिए ऑफलाइन आपातकालीन समर्थन के साथ AI-पावर्ड फ्लड कोपायलट",
     "home.description":
       "आवाज़, टेक्स्ट और छवियों के माध्यम से नागरिकों को 112 और स्थानीय सहायकों से तेज़ी से संवाद करने में मदद करता है।",
     "home.reportEmergency": "आपातकाल रिपोर्ट करें",
@@ -916,6 +926,11 @@ const T: Record<Lang, Record<string, string>> = {
     "home.readBulletin": "बुलेटिन पढ़ें",
     "home.dial112": "112 डायल करें",
     "home.alert": "अलर्ट",
+    "home.nearestShelter": "निकटतम आश्रय",
+    "home.currentAlert": "वर्तमान अलर्ट",
+    "home.emergencyContacts": "आपातकालीन संपर्क",
+    "home.offlineStatus": "ऑफलाइन स्थिति",
+    "home.floodSafetyTips": "बाढ़ सुरक्षा सुझाव",
 
     // About
     "about.publicInterest": "सार्वजनिक हित परियोजना",

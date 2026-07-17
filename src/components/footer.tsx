@@ -35,7 +35,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 font-semibold">
               <span className="text-2xl" aria-hidden>🌊</span>
-              <span>Telugu Flood Copilot</span>
+              <span>Flood Copilot</span>
             </div>
             <p className="mt-3 max-w-md text-sm text-muted-foreground">
               An offline-first AI decision support system helping rural Telangana communicate
@@ -79,7 +79,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} Telugu Flood Copilot · Built for Telangana communities.</p>
+          <p>© {new Date().getFullYear()} Flood Copilot · Built for Telangana communities.</p>
           <p>In an emergency, always dial <span className="font-semibold text-foreground">112</span>.</p>
         </div>
       </div>

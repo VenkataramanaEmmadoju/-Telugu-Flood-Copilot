@@ -45,13 +45,13 @@ import type { ImageAnalysis, SosData } from "@/lib/types";
 export const Route = createFileRoute("/report")({
   head: () => ({
     meta: [
-      { title: "Report Emergency — Telugu Flood Copilot" },
+      { title: "Report Emergency — Flood Copilot" },
       {
         name: "description",
         content:
           "Report flood emergencies by voice, text, or photo. AI-assisted summaries and one-tap SOS relay.",
       },
-      { property: "og:title", content: "Report Emergency — Telugu Flood Copilot" },
+      { property: "og:title", content: "Report Emergency — Flood Copilot" },
       {
         property: "og:description",
         content:

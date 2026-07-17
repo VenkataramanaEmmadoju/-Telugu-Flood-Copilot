@@ -35,7 +35,7 @@ import type { Alert, Severity, SourceType } from "@/lib/types";
 export const Route = createFileRoute("/alerts")({
   head: () => ({
     meta: [
-      { title: "Flood Alerts — Telugu Flood Copilot" },
+      { title: "Flood Alerts — Flood Copilot" },
       {
         name: "description",
         content:

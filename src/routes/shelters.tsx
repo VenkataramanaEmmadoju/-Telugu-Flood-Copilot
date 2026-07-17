@@ -33,13 +33,13 @@ import type { Shelter } from "@/lib/types";
 export const Route = createFileRoute("/shelters")({
   head: () => ({
     meta: [
-      { title: "Shelter Finder — Telugu Flood Copilot" },
+      { title: "Shelter Finder — Flood Copilot" },
       {
         name: "description",
         content:
           "Find the nearest relief camps, schools, and community halls in rural Telangana with real-time capacity and directions.",
       },
-      { property: "og:title", content: "Shelter Finder — Telugu Flood Copilot" },
+      { property: "og:title", content: "Shelter Finder — Flood Copilot" },
       {
         property: "og:description",
         content:

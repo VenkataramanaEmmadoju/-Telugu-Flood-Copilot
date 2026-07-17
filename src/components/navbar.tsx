@@ -30,7 +30,7 @@ export function Navbar() {
         <Link to="/" className="flex items-center gap-2 font-semibold">
           <span className="text-2xl" aria-hidden>🌊</span>
           <span className="hidden text-base tracking-tight sm:inline">
-            Telugu Flood Copilot
+            Flood Copilot
           </span>
         </Link>
 

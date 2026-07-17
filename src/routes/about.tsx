@@ -33,13 +33,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Telugu Flood Copilot" },
+      { title: "About — Flood Copilot" },
       {
         name: "description",
         content:
-          "Mission, technology, and team behind Telugu Flood Copilot — an offline-first AI decision support system for flood response in rural Telangana.",
+          "Mission, technology, and team behind Flood Copilot — an offline-first AI decision support system for flood response in rural Telangana.",
       },
-      { property: "og:title", content: "About Telugu Flood Copilot" },
+      { property: "og:title", content: "About Flood Copilot" },
       {
         property: "og:description",
         content: "How the offline AI copilot works, the stack it runs on, and the team behind it.",

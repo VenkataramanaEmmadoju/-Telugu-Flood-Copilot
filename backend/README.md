@@ -1,6 +1,6 @@
 # Flood Copilot — Backend
 
-Express.js API backend for the Telugu Flood Copilot hackathon project.
+Express.js API backend for the Flood Copilot hackathon project.
 
 ## Stack
 

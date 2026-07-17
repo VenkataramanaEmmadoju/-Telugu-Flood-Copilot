@@ -1,6 +1,6 @@
-# Telugu Flood Copilot 🌊
+# Flood Copilot 🌊
 
-**Offline AI Decision Support for Rural Telangana**
+**AI-Powered Flood Copilot with Offline Emergency Support for Rural Telangana**
 
 A hackathon project that helps citizens communicate faster with 112 and local responders during floods — using voice, text, and photos — even in low-connectivity environments.
 
