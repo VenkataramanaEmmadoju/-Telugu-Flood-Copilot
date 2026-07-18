@@ -237,7 +237,7 @@ function AboutPage() {
               const Icon = n.icon;
               const isHub = n.label === "AI Copilot";
               return (
-                <div key={n.label} className="flex items-center gap-2 md:flex-1 md:min-w-[8rem]">
+                <div key={n.label} className="flex items-start gap-2 md:items-center md:flex-1 md:min-w-[8rem]">
                   <div className="flex flex-col items-center gap-2 text-center">
                     <div
                       className={cn(

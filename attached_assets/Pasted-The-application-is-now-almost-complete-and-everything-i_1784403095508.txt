@@ -1,0 +1,151 @@
+The application is now almost complete and everything is working perfectly.
+
+There are ONLY TWO remaining issues.
+
+DO NOT modify anything except these two issues.
+
+Do NOT redesign the UI.
+Do NOT change colors.
+Do NOT change typography.
+Do NOT change spacing unless absolutely necessary.
+Do NOT change animations.
+Do NOT change business logic.
+Do NOT change APIs.
+Do NOT change translations.
+Do NOT change routing.
+Do NOT change responsiveness of any other page.
+Do NOT modify any component outside the ones mentioned below.
+
+==========================================================
+ISSUE 1 — FLOOD ALERTS PAGE
+(Applies to ALL screen sizes: Mobile, Tablet and Desktop)
+==========================================================
+
+Problem:
+
+The "All districts" dropdown on the Flood Alerts page only displays a few districts.
+
+However, the Shelters page already has the correct implementation that displays ALL Telangana districts.
+
+I want the Flood Alerts page to use the EXACT SAME district list and behavior as the Shelters page.
+
+Requirements:
+
+1. Replace ONLY the district source used by the Flood Alerts page.
+2. Use the same district dataset already used on the Shelters page.
+3. The dropdown must contain ALL districts of Telangana.
+4. Keep the same dropdown component.
+5. Keep the same styling.
+6. Keep the same animations.
+7. Keep the same icons.
+8. Keep search/filter functionality unchanged.
+9. Keep translations unchanged.
+10. Keep filtering logic unchanged.
+11. Only replace the incomplete district list with the full Telangana district list already used by the Shelters page.
+
+The dropdown should include every Telangana district (same as Shelters page), for example:
+
+• Adilabad
+• Bhadradri Kothagudem
+• Hanamkonda
+• Hyderabad
+• Jagtial
+• Jangaon
+• Jayashankar Bhupalpally
+• Jogulamba Gadwal
+• Kamareddy
+• Karimnagar
+• Khammam
+• Komaram Bheem Asifabad
+• Mahabubabad
+• Mahabubnagar
+• Mancherial
+• Medak
+• Medchal–Malkajgiri
+• Mulugu
+• Nagarkurnool
+• Nalgonda
+• Narayanpet
+• Nirmal
+• Nizamabad
+• Peddapalli
+• Rajanna Sircilla
+• Rangareddy
+• Sangareddy
+• Siddipet
+• Suryapet
+• Vikarabad
+• Wanaparthy
+• Warangal
+• Yadadri Bhuvanagiri
+
+The final dropdown should match the Shelters page exactly.
+
+==========================================================
+ISSUE 2 — ABOUT PAGE
+(MOBILE DEVICES ONLY)
+==========================================================
+
+Section:
+
+Multimodal inputs → structured action
+
+The workflow cards have already been converted into a two-column layout.
+
+However, they are NOT visually aligned.
+
+Current problems:
+
+• Card heights are inconsistent.
+• Icons are not aligned.
+• Titles start at different heights.
+• Text baselines do not line up.
+• Overall grid looks uneven.
+
+I ONLY want the mobile layout refined.
+
+Requirements:
+
+1. Keep the existing two-column layout.
+2. Do NOT change desktop layout.
+3. Do NOT change tablet layout.
+4. Make every workflow card have identical width.
+5. Make every workflow card have identical height.
+6. Icons should align horizontally.
+7. Titles should align horizontally.
+8. Subtitle text should align consistently.
+9. Equal spacing between all cards.
+10. Equal spacing between rows.
+11. Keep all icons exactly the same.
+12. Keep card contents exactly the same.
+13. Keep colors exactly the same.
+14. Keep typography exactly the same.
+15. Keep animations exactly the same.
+16. Do NOT redesign the cards.
+17. Only improve alignment so the grid looks clean and professional.
+
+The final layout should look like a perfectly aligned responsive 2-column grid.
+
+==========================================================
+
+FINAL REQUIREMENTS
+
+Only perform these two fixes.
+
+Everything else in the application is already complete and must remain EXACTLY the same.
+
+Verify before finishing:
+
+✅ Flood Alerts "All districts" dropdown now contains the complete Telangana district list (same as Shelters page) on desktop, tablet and mobile.
+
+✅ About page workflow cards remain two columns on mobile but are now perfectly aligned with equal heights, equal spacing and consistent positioning.
+
+✅ No other UI changes.
+
+✅ No business logic changes.
+
+✅ No API changes.
+
+✅ No translation changes.
+
+✅ No redesign anywhere else in the application.

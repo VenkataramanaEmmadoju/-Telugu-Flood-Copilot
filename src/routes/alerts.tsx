@@ -138,10 +138,17 @@ function AlertsPage() {
 
   useEffect(() => { load(); }, []);
 
-  const districts = useMemo(
-    () => Array.from(new Set(alerts.map((a) => a.district))).sort(),
-    [alerts],
-  );
+  const districts = [
+    "Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad",
+    "Jagtial", "Jangaon", "Jayashankar Bhupalpally", "Jogulamba Gadwal",
+    "Kamareddy", "Karimnagar", "Khammam", "Kumuram Bheem Asifabad",
+    "Mahabubabad", "Mahabubnagar", "Mancherial", "Medak",
+    "Medchal-Malkajgiri", "Mulugu", "Nagarkurnool", "Nalgonda",
+    "Narayanpet", "Nirmal", "Nizamabad", "Peddapalli",
+    "Rajanna Sircilla", "Rangareddy", "Sangareddy", "Siddipet",
+    "Suryapet", "Vikarabad", "Wanaparthy", "Warangal",
+    "Yadadri Bhuvanagiri",
+  ];
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
