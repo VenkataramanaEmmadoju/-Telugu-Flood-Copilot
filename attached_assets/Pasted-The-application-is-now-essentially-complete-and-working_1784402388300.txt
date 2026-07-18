@@ -1,0 +1,139 @@
+The application is now essentially complete and working perfectly.
+
+There are ONLY TWO remaining mobile responsiveness issues.
+
+DO NOT modify anything except the two issues described below.
+
+Do NOT refactor.
+Do NOT redesign.
+Do NOT change colors.
+Do NOT change spacing (unless required to prevent overflow).
+Do NOT change typography.
+Do NOT change desktop layout.
+Do NOT change tablet layout.
+Do NOT modify APIs.
+Do NOT modify business logic.
+Do NOT modify translations.
+Do NOT modify routing.
+Do NOT modify animations.
+Do NOT modify any other page.
+
+====================================================
+ISSUE 1 — FLOOD ALERTS PAGE (MOBILE ONLY)
+====================================================
+
+On mobile devices, the filter/search section has two problems.
+
+Problem A:
+The filter container overflows outside its parent card.
+
+Problem B:
+The "All districts" dropdown is not rendering correctly.
+It behaves differently from the dropdown used on the Shelters page.
+
+Requirements:
+
+1. Fix ONLY the mobile layout.
+2. Search box should occupy full available width.
+3. "All districts" dropdown should render exactly like the Shelters page dropdown.
+4. "All severities" dropdown should match the same style.
+5. Both dropdowns must:
+   - remain inside the container
+   - never overflow horizontally
+   - wrap correctly
+   - have equal widths
+   - align perfectly
+6. The filter card itself should never exceed viewport width.
+7. Remove every horizontal overflow.
+8. No horizontal scrolling.
+9. Desktop and tablet layouts must remain unchanged.
+
+Test on:
+320px
+360px
+375px
+390px
+412px
+430px
+
+====================================================
+ISSUE 2 — ABOUT PAGE (MOBILE ONLY)
+====================================================
+
+Section:
+
+"Multimodal inputs → structured action"
+
+Current issue:
+
+The workflow cards
+(Voice,
+Photo,
+AI Copilot,
+AI Summary,
+etc.)
+
+are stacked vertically,
+making the section unnecessarily tall and visually cluttered.
+
+I want ONLY the mobile layout changed.
+
+Requirements:
+
+1. Keep every existing card.
+2. Keep icons exactly the same.
+3. Keep colors exactly the same.
+4. Keep spacing style exactly the same.
+5. Keep animations exactly the same.
+6. Keep typography exactly the same.
+7. Do NOT change card contents.
+8. Do NOT change business logic.
+
+Only change the layout.
+
+Desired layout:
+
+• Display these workflow cards in a responsive TWO-COLUMN GRID on mobile.
+
+Example:
+
+Voice           Photo
+
+AI Copilot      AI Summary
+
+Safety          SOS
+
+etc.
+
+Requirements:
+
+- 2 equal-width columns.
+- Equal spacing.
+- Proper alignment.
+- Cards should never overflow.
+- Cards should keep identical height.
+- Text should wrap naturally.
+- No clipping.
+- No horizontal scrolling.
+- Maintain existing design language.
+
+Desktop and tablet layouts must remain EXACTLY as they are today.
+
+====================================================
+
+FINAL REQUIREMENTS
+
+Only fix these two mobile issues.
+
+Everything else in the application is already complete and should remain completely unchanged.
+
+After implementation verify:
+
+✅ No horizontal overflow
+✅ No clipped dropdowns
+✅ "All districts" matches Shelters page behavior
+✅ Search/filter card fits the viewport
+✅ About page workflow cards display in a clean 2-column mobile grid
+✅ Desktop unchanged
+✅ Tablet unchanged
+✅ No other files or pages modified

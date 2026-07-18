@@ -235,9 +235,9 @@ function AlertsPage() {
             className="pl-9"
           />
         </div>
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-3 md:flex">
           <Select value={district} onValueChange={setDistrict}>
-            <SelectTrigger className="w-full min-w-[10rem] md:w-48">
+            <SelectTrigger className="w-full md:w-48">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
               <SelectValue placeholder={t("alerts.allDistricts")} />
             </SelectTrigger>
@@ -250,7 +250,7 @@ function AlertsPage() {
           </Select>
 
           <Select value={severity} onValueChange={setSeverity}>
-            <SelectTrigger className="w-full min-w-[10rem] md:w-44">
+            <SelectTrigger className="w-full md:w-44">
               <AlertTriangle className="mr-2 h-4 w-4 text-muted-foreground" />
               <SelectValue placeholder={t("alerts.allSeverities")} />
             </SelectTrigger>
