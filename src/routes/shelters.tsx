@@ -307,8 +307,8 @@ function SummaryCard({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
-          <p className="mt-2 truncate text-lg font-semibold text-foreground sm:text-xl">{value}</p>
-          <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+          <p className="mt-2 break-words text-base font-semibold text-foreground sm:text-lg">{value}</p>
+          <p className="mt-1 break-words text-xs text-muted-foreground">{hint}</p>
         </div>
         <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${toneClass}`}>
           <Icon className="h-5 w-5" />
