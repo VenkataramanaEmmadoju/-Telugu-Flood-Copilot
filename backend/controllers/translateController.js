@@ -1,6 +1,7 @@
 "use strict";
 const { chatCompletion } = require("../services/groqService");
-const { ok } = require("../utils/respond");
+const { ok, fail } = require("../utils/respond");
+const { FRIENDLY, isAiProviderError, aiHttpStatus } = require("../utils/aiError");
 const logger = require("../utils/logger");
 
 async function postTranslate(req, res, next) {
@@ -48,6 +49,10 @@ async function postTranslate(req, res, next) {
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
+    if (isAiProviderError(err)) {
+      logger.error(`[translate] AI provider error: ${err.status ?? ""} ${err.message}`);
+      return fail(res, FRIENDLY.translate, aiHttpStatus(err));
+    }
     next(err);
   }
 }

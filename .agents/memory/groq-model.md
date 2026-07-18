@@ -1,15 +1,22 @@
 ---
-name: Groq model selection
-description: Which Groq models are live; llama3-8b-8192 was decommissioned in mid-2026
+name: Groq model deprecation
+description: Which Groq models are active vs decommissioned for this project
 ---
 
-## Rule
-Never use `llama3-8b-8192` — it is decommissioned and returns a 400 error.
+## Chat model
+- **Active:** `llama-3.1-8b-instant`
+- Set in `backend/config/env.js` → `groq.model`
 
-**Current defaults (backend/config/env.js):**
-- Chat / voice / translate / SOS: `llama-3.1-8b-instant`
-- Vision (image analysis): `llama-3.2-11b-vision-preview`
+## Vision model
+- **Active:** `meta-llama/llama-4-maverick-17b-128e-instruct`
+- Set in `backend/config/env.js` → `groq.modelVision`
+- **Decommissioned (do not use):**
+  - `llama3-8b-8192`
+  - `llama-3.2-11b-vision-preview`
+  - `llama-3.2-90b-vision-preview`
+- **No access (404 for this API key):**
+  - `meta-llama/llama-4-scout-17b-16e-instruct`
 
-**Why:** Groq decommissioned llama3-8b-8192 in July 2026. llama-3.1-8b-instant is the recommended drop-in.
+**Why:** Groq rotates models frequently. Always verify against https://console.groq.com/docs/deprecations before changing.
 
-**How to apply:** Any new Groq call must use one of the above model IDs, or read `GROQ_MODEL` / `GROQ_VISION_MODEL` env vars set by the operator.
+**How to apply:** If a model error appears, check `backend/config/env.js` first. The `GROQ_MODEL` and `GROQ_VISION_MODEL` env vars override the defaults without a code change.

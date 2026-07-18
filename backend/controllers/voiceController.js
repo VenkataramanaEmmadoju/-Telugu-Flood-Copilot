@@ -1,6 +1,7 @@
 "use strict";
 const { chatCompletion } = require("../services/groqService");
-const { ok } = require("../utils/respond");
+const { ok, fail } = require("../utils/respond");
+const { FRIENDLY, isAiProviderError, aiHttpStatus } = require("../utils/aiError");
 const logger = require("../utils/logger");
 
 const SYSTEM_PROMPT = `You are Flood Copilot, a bilingual voice assistant for flood emergencies in Telangana.
@@ -26,12 +27,12 @@ async function postVoice(req, res, next) {
 
     const reply = await chatCompletion(messages, { maxTokens: 256, temperature: 0.5 });
 
-    ok(res, {
-      reply,
-      detectedLanguage: language,
-      timestamp: new Date().toISOString(),
-    });
+    ok(res, { reply, detectedLanguage: language, timestamp: new Date().toISOString() });
   } catch (err) {
+    if (isAiProviderError(err)) {
+      logger.error(`[voice] AI provider error: ${err.status ?? ""} ${err.message}`);
+      return fail(res, FRIENDLY.voice, aiHttpStatus(err));
+    }
     next(err);
   }
 }

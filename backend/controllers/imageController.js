@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { visionCompletion } = require("../services/groqService");
 const { ok, fail } = require("../utils/respond");
+const { FRIENDLY, isAiProviderError, aiHttpStatus } = require("../utils/aiError");
 const logger = require("../utils/logger");
 
 const VISION_PROMPT = `You are a flood severity assessment expert. Analyse this image and provide:
@@ -46,17 +47,17 @@ async function postImage(req, res, next) {
       analysis = { summary: rawResponse };
     }
 
-    ok(res, {
-      analysis,
-      imageId: path.basename(filePath),
-      timestamp: new Date().toISOString(),
-    });
+    ok(res, { analysis, imageId: path.basename(filePath), timestamp: new Date().toISOString() });
   } catch (err) {
+    if (isAiProviderError(err)) {
+      logger.error(`[image] AI provider error: ${err.status ?? ""} ${err.message}`);
+      return fail(res, FRIENDLY.image, aiHttpStatus(err));
+    }
     next(err);
   } finally {
-    // Clean up uploaded file
+    // Always clean up the uploaded file
     if (filePath && fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+      try { fs.unlinkSync(filePath); } catch { /* ignore cleanup errors */ }
     }
   }
 }

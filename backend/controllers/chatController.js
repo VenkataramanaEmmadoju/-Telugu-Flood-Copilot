@@ -1,6 +1,7 @@
 "use strict";
 const { chatCompletion } = require("../services/groqService");
-const { ok } = require("../utils/respond");
+const { ok, fail } = require("../utils/respond");
+const { FRIENDLY, isAiProviderError, aiHttpStatus } = require("../utils/aiError");
 const logger = require("../utils/logger");
 
 const SYSTEM_PROMPT = `You are Flood Copilot, a bilingual flood emergency assistant for rural Telangana, India.
@@ -16,7 +17,7 @@ async function postChat(req, res, next) {
 
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
-      ...history.slice(-6), // keep last 3 exchanges for context
+      ...history.slice(-6),
       { role: "user", content: message },
     ];
 
@@ -24,11 +25,12 @@ async function postChat(req, res, next) {
 
     const reply = await chatCompletion(messages, { maxTokens: 512, temperature: 0.7 });
 
-    ok(res, {
-      reply,
-      timestamp: new Date().toISOString(),
-    });
+    ok(res, { reply, timestamp: new Date().toISOString() });
   } catch (err) {
+    if (isAiProviderError(err)) {
+      logger.error(`[chat] AI provider error: ${err.status ?? ""} ${err.message}`);
+      return fail(res, FRIENDLY.chat, aiHttpStatus(err));
+    }
     next(err);
   }
 }
