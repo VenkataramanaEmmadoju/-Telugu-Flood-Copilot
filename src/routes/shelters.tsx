@@ -154,7 +154,7 @@ function SheltersPage() {
   return (
     <div className="relative">
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-subtle)" }} />
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <SectionHeader
           eyebrow="Nearby Relief"
           title="Shelter Finder"
@@ -230,7 +230,7 @@ function SheltersPage() {
         </div>
 
         {/* Map + list */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.15fr_1fr]">
+        <div className="mt-4 grid gap-4 sm:mt-6 sm:gap-6 lg:grid-cols-[1.15fr_1fr]">
           <MapPlaceholder
             shelters={filtered}
             selectedId={selected?.id}
@@ -247,7 +247,7 @@ function SheltersPage() {
 
             <div className="mt-3 space-y-3">
               {filtered.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+                <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-center sm:p-8">
                   <MapPin className="mx-auto h-6 w-6 text-muted-foreground" />
                   <p className="mt-2 text-sm font-medium text-foreground">
                     No shelters match your filters
@@ -300,12 +300,12 @@ function SummaryCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)]"
+      className="rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] sm:p-5"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
-          <p className="mt-2 truncate text-xl font-semibold text-foreground">{value}</p>
+          <p className="mt-2 truncate text-lg font-semibold text-foreground sm:text-xl">{value}</p>
           <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
         </div>
         <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${toneClass}`}>
@@ -313,7 +313,7 @@ function SummaryCard({
         </span>
       </div>
       {typeof progress === "number" && (
-        <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary sm:mt-4">
           <div
             className="h-full rounded-full bg-gradient-to-r from-primary to-primary-glow transition-all"
             style={{ width: `${Math.min(100, progress)}%` }}
@@ -499,7 +499,7 @@ function ShelterCard({
         <Stat icon={Phone} label="Contact" value={shelter.phone} mono />
       </div>
 
-      <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary sm:mt-4">
         <div
           className={`h-full rounded-full transition-all ${
             shelter.status === "full" ? "bg-destructive" : shelter.status === "filling" ? "bg-amber-500" : "bg-emerald-500"
