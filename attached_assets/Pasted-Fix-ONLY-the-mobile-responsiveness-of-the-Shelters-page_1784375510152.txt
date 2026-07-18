@@ -1,0 +1,79 @@
+Fix ONLY the mobile responsiveness of the Shelters page.
+
+IMPORTANT:
+Do NOT redesign anything.
+Do NOT change colors.
+Do NOT change typography.
+Do NOT change spacing on desktop.
+Do NOT change animations.
+Do NOT change map behavior.
+Do NOT change marker behavior.
+Do NOT change business logic.
+Do NOT change APIs.
+Do NOT change filtering.
+Do NOT change search.
+Do NOT change card design.
+Do NOT change desktop layout.
+Do NOT modify any other page in the application.
+
+The ONLY task is to fix the mobile layout so that every element fits within the viewport.
+
+Current issue:
+On mobile devices (320px–767px widths), several components overflow horizontally outside the screen. The user should NEVER need horizontal scrolling.
+
+Requirements:
+
+1. The entire Shelters page must fit inside the viewport.
+2. Remove every horizontal overflow.
+3. Ensure the body/page/container never exceeds viewport width.
+4. Any parent container causing overflow must use proper responsive sizing.
+5. Replace any fixed pixel widths with responsive widths where necessary.
+6. Images, cards, map, search box, filter dropdowns, statistics cards and buttons must never extend beyond the screen.
+7. All cards should occupy:
+   - width: 100%
+   - max-width: 100%
+   - box-sizing: border-box
+8. Prevent long text from pushing layouts wider than the screen.
+9. Buttons should wrap or stack naturally instead of overflowing.
+10. Search input should always fit inside its parent.
+11. Filter dropdowns should be full width on mobile.
+12. Statistics cards should wrap correctly instead of overflowing.
+13. Contact numbers should wrap if needed.
+14. Capacity bars should resize with the card width.
+15. Map controls should remain inside the map boundaries.
+16. The map itself should remain 100% width.
+17. No horizontal scrollbar should exist at any screen width.
+
+Responsive breakpoints to verify:
+
+• 320px
+• 360px
+• 375px
+• 390px
+• 412px
+• 430px
+• 480px
+• 768px
+• Tablet
+• Desktop
+
+The layout must be tested at every breakpoint.
+
+Acceptance criteria:
+
+✔ No horizontal scrolling.
+✔ No clipped cards.
+✔ No clipped search bar.
+✔ No clipped filters.
+✔ No clipped statistics cards.
+✔ No clipped map controls.
+✔ No overflowing buttons.
+✔ Every shelter card fully visible.
+✔ Everything remains aligned.
+✔ Desktop appearance remains EXACTLY the same.
+✔ Tablet appearance remains EXACTLY the same.
+✔ Only mobile responsiveness is fixed.
+
+Do not refactor unrelated code.
+Do not change any UI styling unless required to eliminate overflow.
+Do not touch any page except the Shelters page.

@@ -152,7 +152,7 @@ function SheltersPage() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden">
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-subtle)" }} />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <SectionHeader
@@ -402,8 +402,9 @@ function MapPlaceholder({
                     <p className="truncate text-sm font-semibold text-foreground">{sel.name}</p>
                     <StatusBadge variant={badge.variant}>{badge.label}</StatusBadge>
                   </div>
-                  <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="h-3 w-3" /> {sel.village}, {sel.district}
+                  <p className="mt-1 flex min-w-0 items-center gap-1 overflow-hidden text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{sel.village}, {sel.district}</span>
                   </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     {sel.distanceKm} km away · {Math.max(0, sel.capacity - sel.occupied)} beds free
@@ -484,13 +485,13 @@ function ShelterCard({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate text-base font-semibold text-foreground">{shelter.name}</h3>
-          <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <MapPin className="h-3 w-3" />
-            {shelter.village}, {shelter.district}
+          <p className="mt-1 flex min-w-0 items-center gap-1 overflow-hidden text-xs text-muted-foreground">
+            <MapPin className="h-3 w-3 shrink-0" />
+            <span className="truncate">{shelter.village}, {shelter.district}</span>
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">{shelter.type}</p>
         </div>
-        <StatusBadge variant={badge.variant}>{badge.label}</StatusBadge>
+        <StatusBadge variant={badge.variant} className="shrink-0 whitespace-nowrap">{badge.label}</StatusBadge>
       </div>
 
       <div className="mt-3 grid grid-cols-3 gap-2 text-sm sm:mt-4 sm:gap-3">
@@ -547,7 +548,7 @@ function Stat({
 }) {
   return (
     <div className="min-w-0 overflow-hidden rounded-lg bg-secondary/50 p-2 sm:p-2.5">
-      <p className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+      <p className="flex min-w-0 items-center gap-1 overflow-hidden text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
         <Icon className="h-3 w-3 shrink-0" />
         <span className="truncate">{label}</span>
       </p>
