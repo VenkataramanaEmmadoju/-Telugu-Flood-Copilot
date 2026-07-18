@@ -79,7 +79,7 @@ The SOS should ask for immediate rescue and include the location prominently.`;
     {
       role: "system",
       content:
-        "You are an emergency communications specialist. Generate accurate, urgent SOS messages for flood victims in Telangana. Always include location, people count, and urgency. Return valid JSON only.",
+        "You are an emergency communications specialist. Generate accurate, urgent SOS messages for flood victims in Telangana. The input details may be written in Telugu, English, or Hindi — understand them in whichever language they arrive. Always include location, people count, and urgency. Return valid JSON only.",
     },
     { role: "user", content: prompt },
   ];

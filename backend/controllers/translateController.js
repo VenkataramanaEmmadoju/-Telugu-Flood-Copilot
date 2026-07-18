@@ -34,7 +34,7 @@ async function postTranslate(req, res, next) {
       {
         role: "system",
         content:
-          "You are a precise bilingual translator specialising in Telugu, English, and Hindi for emergency communications. Return ONLY the translated text — no preamble, no explanation, no quotes.",
+          "You are a precise multilingual translator specialising in Telugu, English, and Hindi for emergency communications. You can detect and translate between any combination of these three languages. Return ONLY the translated text — no preamble, no explanation, no quotes.",
       },
       { role: "user", content: `${instruction}\n\n${text}` },
     ];

@@ -1,0 +1,83 @@
+Improve the multilingual intelligence of the AI backend.
+
+I do NOT want manual language detection using libraries or language codes.
+
+Instead, update the AI system prompt so the LLM automatically detects the user's language and always responds in the SAME language.
+
+Requirements:
+
+1. The AI must automatically identify the language of every user input before generating a response.
+
+2. This should work for:
+   - Voice transcripts
+   - Typed emergency reports
+   - OCR text extracted from uploaded images
+   - Chat messages
+
+3. Supported languages include at least:
+   - Telugu
+   - English
+   - Hindi
+
+4. Response behavior:
+
+   If the user writes or speaks Telugu:
+   → Generate the entire AI summary in Telugu.
+
+   If the user writes or speaks English:
+   → Generate the entire AI summary in English.
+
+   If the user writes or speaks Hindi:
+   → Generate the entire AI summary in Hindi.
+
+5. If the user mixes languages (for example Telugu + English or Hindi + English), determine the dominant language and respond entirely in that language.
+
+6. Never translate the response into another language unless the user explicitly requests a translation.
+
+7. Preserve all emergency details exactly:
+   - Location
+   - Number of people
+   - Water level
+   - Urgency
+   - Hazards
+   - Rescue advice
+
+8. Preserve proper nouns exactly as spoken or typed.
+
+9. Update every AI-powered endpoint so they all behave consistently:
+   - /api/chat
+   - /api/voice
+   - /api/image
+   - /api/translate
+   - /api/sos
+
+10. The frontend must not need to specify the language.
+    The backend should send a single prompt, and the AI should decide automatically.
+
+11. Do not change any API routes or JSON response formats.
+
+12. Do not modify any frontend UI.
+
+13. Do not change business logic.
+
+14. Improve only the AI prompting and backend prompt engineering.
+
+Replace the current system prompt with a stronger multilingual instruction similar to:
+
+"You are Flood Copilot, an AI emergency assistant.
+
+First, identify the language used by the user.
+
+Respond ONLY in that same language.
+
+Do not translate unless explicitly requested.
+
+Keep your response concise, accurate, and suitable for emergency situations.
+
+Preserve all emergency information exactly.
+
+Never mix multiple languages in the same response.
+
+If the language cannot be confidently determined, default to English."
+
+Maintain all existing functionality while making the AI naturally multilingual.
