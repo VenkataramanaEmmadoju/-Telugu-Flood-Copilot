@@ -4,36 +4,50 @@ const { ok, fail } = require("../utils/respond");
 const { FRIENDLY, isAiProviderError, aiHttpStatus } = require("../utils/aiError");
 const logger = require("../utils/logger");
 
-// Language-specific reply directives used when the user explicitly selects a language.
-const EXPLICIT_LANG_RULES = {
-  en: "The user selected English. Reply entirely in English regardless of how the transcript looks.",
-  hi: "The user selected Hindi. Reply entirely in Hindi using Devanagari script (e.g. मैं, आप, पानी). Never use romanized Hindi.",
-  te: "The user selected Telugu. Reply entirely in Telugu using Telugu script (e.g. నేను, మీరు, వరదలు). Never use romanized Telugu.",
+/**
+ * Detect language from the transcript using Unicode script ranges.
+ * This is deterministic — no LLM guesswork.
+ *
+ * - Devanagari (U+0900–U+097F) → Hindi
+ * - Telugu    (U+0C00–U+0C7F) → Telugu
+ * - Everything else (Latin/ASCII) → English
+ * - Single word regardless of script → English (safe default)
+ */
+function detectLanguage(transcript) {
+  const words = transcript.trim().split(/\s+/);
+  if (words.length <= 1) return "en"; // single word → English default
+
+  let devanagari = 0;
+  let telugu = 0;
+  let total = 0;
+
+  for (const ch of transcript) {
+    if (ch.trim() === "") continue;
+    total++;
+    const cp = ch.codePointAt(0);
+    if (cp >= 0x0900 && cp <= 0x097f) devanagari++;
+    else if (cp >= 0x0c00 && cp <= 0x0c7f) telugu++;
+  }
+
+  // Require at least 15% of characters in a script to count as that language
+  const threshold = total * 0.15;
+  if (devanagari >= threshold) return "hi";
+  if (telugu >= threshold) return "te";
+  return "en";
+}
+
+const REPLY_RULES = {
+  en: "Reply entirely in English.",
+  hi: "Reply entirely in Hindi. Use Devanagari script only (e.g. मैं, पानी, खतरा). Never use romanized Hindi.",
+  te: "Reply entirely in Telugu. Use Telugu script only (e.g. నేను, వరదలు, ప్రమాదం). Never use romanized Telugu.",
 };
 
-function buildSystemPrompt(language) {
-  const explicitRule = language && language !== "auto" ? EXPLICIT_LANG_RULES[language] ?? "" : "";
-
-  const languageSection = explicitRule
-    ? `LANGUAGE RULE — follow this before anything else:
-- ${explicitRule}
-- EXCEPTION: If the transcript is a single word or fewer than three words and the language cannot be confidently identified, reply in English as the safe default.
-- Never mix languages in the same reply.
-- Always write Hindi in Devanagari script and Telugu in Telugu script — never in Roman letters.`
-    : `LANGUAGE RULE — follow this before anything else:
-- Look at the script and words the user spoke (transcribed to text).
-- If the input is a single word, very short, or the language cannot be confidently identified → reply in English.
-- If the user clearly spoke in English → reply entirely in English.
-- If the user clearly spoke in Hindi → reply entirely in Hindi using Devanagari script (e.g. मैं, आप, पानी). Never use romanized Hindi like "Kya aapka" or "Kripaya".
-- If the user clearly spoke in Telugu → reply entirely in Telugu using Telugu script (e.g. నేను, మీరు). Never use romanized Telugu.
-- If the user mixed languages, use whichever language dominates. If uncertain, default to English.
-- Never reply in a different language than the one the user used.
-- Never mix languages in the same reply.
-- Always write Hindi in Devanagari script and Telugu in Telugu script — never in Roman letters.`;
-
+function buildSystemPrompt(detectedLang) {
   return `You are Flood Copilot, an AI voice assistant for flood emergencies.
 
-${languageSection}
+LANGUAGE RULE — this is mandatory, follow it before anything else:
+- ${REPLY_RULES[detectedLang]}
+- Never mix languages in the same reply.
 
 Focus on immediate safety: evacuation, shelter locations, emergency contacts (112, 1077, 108).
 Preserve all emergency details exactly: location, number of people, water level, urgency, and hazards.
@@ -45,9 +59,18 @@ async function postVoice(req, res, next) {
   try {
     const { transcript, language = "auto" } = req.body;
 
-    logger.info("[voice] Processing transcript", { length: transcript.length, language });
+    // If the caller provides an explicit language (not "auto"), trust it.
+    // Otherwise detect deterministically from the transcript's Unicode script.
+    const detectedLang =
+      language && language !== "auto" ? language : detectLanguage(transcript);
 
-    const systemPrompt = buildSystemPrompt(language);
+    logger.info("[voice] Processing transcript", {
+      length: transcript.length,
+      clientLang: language,
+      detectedLang,
+    });
+
+    const systemPrompt = buildSystemPrompt(detectedLang);
 
     const messages = [
       { role: "system", content: systemPrompt },
@@ -56,7 +79,7 @@ async function postVoice(req, res, next) {
 
     const reply = await chatCompletion(messages, { maxTokens: 256, temperature: 0.5 });
 
-    ok(res, { reply, detectedLanguage: language, timestamp: new Date().toISOString() });
+    ok(res, { reply, detectedLanguage: detectedLang, timestamp: new Date().toISOString() });
   } catch (err) {
     if (isAiProviderError(err)) {
       logger.error(`[voice] AI provider error: ${err.status ?? ""} ${err.message}`);
