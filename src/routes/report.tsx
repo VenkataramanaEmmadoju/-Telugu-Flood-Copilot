@@ -840,9 +840,9 @@ function PhotoReport() {
             emptyLabel={loading ? "Generating advice…" : "Awaiting image analysis."}
             loading={loading}
           >
-            {analysis?.rescueAdvice && (
+            {(analysis?.recommendedActions ?? analysis?.rescueAdvice) && (
               <ul className="space-y-1.5">
-                {analysis.rescueAdvice.map((advice) => (
+                {(analysis.recommendedActions ?? analysis.rescueAdvice)!.map((advice) => (
                   <li key={advice} className="flex items-start gap-2 text-sm leading-relaxed text-foreground">
                     <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" />
                     {advice}

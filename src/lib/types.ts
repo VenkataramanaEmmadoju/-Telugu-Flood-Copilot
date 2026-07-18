@@ -122,10 +122,12 @@ export interface ImageAnalysis {
   severity?: string;
   waterLevel?: string;
   immediateRisks?: string[];
+  recommendedActions?: string[];
+  // legacy fields kept for backward compatibility
   rescueAdvice?: string[];
   callEmergency?: boolean;
   callEmergencyReason?: string;
-  summary: string;
+  summary?: string;
 }
 
 export interface ImageData {

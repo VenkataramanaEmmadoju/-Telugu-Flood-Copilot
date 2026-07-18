@@ -1,0 +1,171 @@
+Fix ONLY the Flood Risk Assessment feature used after uploading an image.
+
+IMPORTANT:
+Do NOT modify any other feature.
+Do NOT redesign the UI.
+Do NOT change colors.
+Do NOT change typography.
+Do NOT change spacing.
+Do NOT change animations.
+Do NOT change frontend layout.
+Do NOT modify any other API.
+Do NOT modify chat, voice, SOS, shelters, maps, or translation.
+Only improve the backend logic and response formatting for the image analysis endpoint.
+
+Current Problems:
+
+1. The AI response contains internal reasoning such as:
+<think> ... </think>
+
+This must NEVER be displayed to the user.
+
+2. The frontend currently shows:
+Severity: Unknown
+
+instead of a proper severity.
+
+3. Recommended Action is empty.
+
+4. The AI returns one long paragraph instead of structured data.
+
+I want production-quality structured flood analysis.
+
+Requirements:
+
+1. Update the image-analysis prompt so the AI NEVER outputs reasoning, thinking process, markdown, or explanations.
+
+2. The AI must return ONLY valid JSON.
+
+3. Strip any accidental <think>...</think> tags before returning the response.
+
+4. The JSON response should always contain:
+
+{
+  "severity": "...",
+  "waterLevel": "...",
+  "immediateRisks": [
+    "...",
+    "...",
+    "..."
+  ],
+  "recommendedActions": [
+    "...",
+    "...",
+    "...",
+    "..."
+  ]
+}
+
+5. Severity must always be one of:
+
+- Minor
+- Moderate
+- Severe
+- Critical
+
+Never return "Unknown" if the image can be analyzed.
+
+6. Water level should be estimated using simple human-readable values, for example:
+
+- Ankle deep
+- Knee deep
+- Waist deep
+- Chest deep
+- Above chest
+- Vehicle level
+- Unknown (only if truly impossible)
+
+7. Immediate Risks should contain 3–5 short bullet points.
+
+Examples:
+
+• Strong flood currents
+• Drowning risk
+• Electrical hazards
+• Hidden debris
+• Contaminated water
+
+8. Recommended Actions should contain 4–6 short actionable instructions.
+
+Examples:
+
+• Move immediately to higher ground.
+• Avoid walking through moving water.
+• Keep children and elderly together.
+• Contact emergency services.
+• Avoid submerged electrical lines.
+
+9. The frontend should display Recommended Actions as a clean bullet list.
+
+10. Never display raw AI output.
+
+11. Never display markdown.
+
+12. Never display JSON text.
+
+13. Never display <think> tags.
+
+14. Never display model reasoning.
+
+15. If JSON parsing fails, gracefully retry or return a safe fallback JSON:
+
+{
+  "severity":"Moderate",
+  "waterLevel":"Unknown",
+  "immediateRisks":[
+    "Flood hazard detected"
+  ],
+  "recommendedActions":[
+    "Move to higher ground.",
+    "Contact emergency services."
+  ]
+}
+
+16. Improve the AI system prompt to instruct the model:
+
+"You are a flood emergency image analysis system.
+
+Analyze the uploaded flood image.
+
+Return ONLY valid JSON.
+
+Do NOT explain your reasoning.
+
+Do NOT include markdown.
+
+Do NOT include code fences.
+
+Do NOT include <think> tags.
+
+Do NOT include any text outside the JSON object."
+
+17. Preserve the existing endpoint and API contract.
+
+18. Keep the existing frontend components.
+
+19. Only improve the backend image-analysis logic and response parsing.
+
+The final user experience should be:
+
+Flood Risk Assessment
+
+Severity
+Severe
+
+Water Level
+Chest deep
+
+Immediate Risks
+• Strong flood currents
+• Hidden debris
+• Drowning risk
+• Contaminated water
+
+Recommended Actions
+• Move to higher ground immediately.
+• Avoid walking through moving water.
+• Keep children and elderly together.
+• Call emergency services if trapped.
+• Avoid submerged electrical lines.
+
+This should work reliably in production without exposing any internal AI reasoning.
