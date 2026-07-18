@@ -31,7 +31,9 @@ A hackathon project that helps citizens communicate faster with 112 and local re
 |-------|------|
 | Frontend | React 19, TanStack Start (SSR), Tailwind CSS v4, shadcn/ui |
 | Backend | Node.js, Express.js, Groq SDK |
-| AI model | `llama3-8b-8192` (chat/voice/translate/SOS), `llama-3.2-11b-vision-preview` (image) |
+| AI Model | Purpose |
+| llama3-8b-8192 | Chat, Voice, Translation, SOS |
+| meta-llama/llama-4-scout-17b-16e-instruct *(or your current Groq vision model)* | Flood image analysis |
 | Package manager | Bun (frontend), npm (backend) |
 
 ---
