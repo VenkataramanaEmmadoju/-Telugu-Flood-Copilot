@@ -41,6 +41,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import type { ImageAnalysis, SosData } from "@/lib/types";
+import { useLanguage } from "@/lib/language-context";
 
 export const Route = createFileRoute("/report")({
   head: () => ({
@@ -63,12 +64,13 @@ export const Route = createFileRoute("/report")({
 });
 
 function ReportPage() {
+  const { t } = useLanguage();
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader
-        eyebrow="Emergency Report"
-        title="Report a flood emergency"
-        description="Send a report using voice, text, or a photo. Our AI drafts a summary and prepares an SOS you can send in one tap."
+        eyebrow={t("report.eyebrow")}
+        title={t("report.title")}
+        description={t("report.description")}
       />
 
       <div className="mt-8">
@@ -76,15 +78,15 @@ function ReportPage() {
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="voice" className="gap-2">
               <Mic className="h-4 w-4" />
-              <span className="hidden sm:inline">Voice</span>
+              <span className="hidden sm:inline">{t("report.voice")}</span>
             </TabsTrigger>
             <TabsTrigger value="text" className="gap-2">
               <Type className="h-4 w-4" />
-              <span className="hidden sm:inline">Text</span>
+              <span className="hidden sm:inline">{t("report.text")}</span>
             </TabsTrigger>
             <TabsTrigger value="photo" className="gap-2">
               <Camera className="h-4 w-4" />
-              <span className="hidden sm:inline">Photo</span>
+              <span className="hidden sm:inline">{t("report.photo")}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -114,6 +116,7 @@ function SosDialog({
   onClose: () => void;
   prefillEmergency?: string;
 }) {
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [emergency, setEmergency] = useState(prefillEmergency ?? "");
@@ -156,7 +159,7 @@ function SosDialog({
       if (res.success) setResult(res.data);
       else setError(res.error.message);
     } catch {
-      setError("Could not generate SOS. Check your connection.");
+      setError(t("report.sosConnectionError"));
     } finally {
       setLoading(false);
     }
@@ -175,11 +178,10 @@ function SosDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive">
             <Siren className="h-5 w-5" />
-            Generate SOS Message
+            {t("report.sos.title")}
           </DialogTitle>
           <DialogDescription>
-            Fill in the details below. The AI will generate a bilingual SOS in
-            English and Telugu ready to relay to 112.
+            {t("report.sos.subtitle")}
           </DialogDescription>
         </DialogHeader>
 
@@ -187,15 +189,15 @@ function SosDialog({
           <div className="mt-2 space-y-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Your name *</label>
+                <label className="text-sm font-medium">{t("report.sos.yourName")}</label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Raju Yadav"
+                  placeholder={t("report.sos.namePlaceholder")}
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Contact number</label>
+                <label className="text-sm font-medium">{t("report.sos.contact")}</label>
                 <Input
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
@@ -206,27 +208,27 @@ function SosDialog({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Your location *</label>
+              <label className="text-sm font-medium">{t("report.sos.location")}</label>
               <Input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Village, mandal, landmark — be specific"
+                placeholder={t("report.sos.locationPlaceholder")}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Emergency description *</label>
+              <label className="text-sm font-medium">{t("report.sos.emergencyDesc")}</label>
               <Textarea
                 value={emergency}
                 onChange={(e) => setEmergency(e.target.value)}
-                placeholder="Describe the situation: water level, injuries, whether you can move..."
+                placeholder={t("report.sos.emergencyPlaceholder")}
                 className="min-h-[80px] resize-none"
               />
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">People affected</label>
+                <label className="text-sm font-medium">{t("report.sos.people")}</label>
                 <Input
                   value={people}
                   onChange={(e) => setPeople(e.target.value)}
@@ -236,14 +238,14 @@ function SosDialog({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium">Urgency</label>
+                <label className="text-sm font-medium">{t("report.sos.urgency")}</label>
                 <Select value={urgency} onValueChange={(v) => setUrgency(v as typeof urgency)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="critical">Critical — life at risk</SelectItem>
+                    <SelectItem value="high">{t("report.sos.high")}</SelectItem>
+                    <SelectItem value="critical">{t("report.sos.critical")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -265,14 +267,14 @@ function SosDialog({
               ) : (
                 <Siren className="mr-2 h-4 w-4" />
               )}
-              {loading ? "Generating…" : "Generate SOS"}
+              {loading ? t("report.sos.generating") : t("report.sos.generate")}
             </Button>
           </div>
         ) : (
           <div className="mt-2 space-y-4">
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-destructive">
-                English SOS
+                {t("report.sos.englishSOS")}
               </p>
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
                 {result.englishMessage}
@@ -281,7 +283,7 @@ function SosDialog({
 
             <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary">
-                Telugu / తెలుగు
+                {t("report.sos.teluguSOS")}
               </p>
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
                 {result.teluguMessage}
@@ -291,7 +293,7 @@ function SosDialog({
             {result.smsText && (
               <div className="rounded-xl border border-border bg-muted/40 p-4">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  SMS (relay to 112)
+                  {t("report.sos.smsRelay")}
                 </p>
                 <p className="text-sm leading-relaxed text-foreground">{result.smsText}</p>
               </div>
@@ -309,18 +311,18 @@ function SosDialog({
                 ) : (
                   <Copy className="mr-2 h-4 w-4" />
                 )}
-                {copied ? "Copied!" : "Copy message"}
+                {copied ? t("report.sos.copied") : t("report.sos.copyMessage")}
               </Button>
               <Button asChild size="sm" className="flex-1 bg-destructive text-white hover:bg-destructive/90">
                 <a href="tel:112">
                   <Phone className="mr-2 h-4 w-4" />
-                  Call 112 now
+                  {t("report.call112Now")}
                 </a>
               </Button>
             </div>
 
             <Button variant="ghost" size="sm" onClick={reset} className="w-full text-muted-foreground">
-              Generate another SOS
+              {t("report.sos.generateAnother")}
             </Button>
           </div>
         )}
@@ -340,6 +342,7 @@ declare global {
 }
 
 function VoiceReport() {
+  const { t } = useLanguage();
   const [recording, setRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [transcript, setTranscript] = useState("");
@@ -393,20 +396,20 @@ function VoiceReport() {
     rec.onresult = (e: SpeechRecognitionEvent) => {
       let interim = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        const t = e.results[i][0].transcript;
-        if (e.results[i].isFinal) finalText += t + " ";
-        else interim = t;
+        const text = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += text + " ";
+        else interim = text;
       }
       setTranscript((finalText + interim).trim());
     };
     rec.onerror = () => {
       setRecording(false);
       if (timer.current) window.clearInterval(timer.current);
-      setError("Microphone access denied or not available. Type a transcript below.");
+      setError(t("report.micError"));
     };
     rec.start();
     setRecording(true);
-  }, []);
+  }, [t]);
 
   const stopRecording = useCallback(async () => {
     recognitionRef.current?.stop();
@@ -423,11 +426,11 @@ function VoiceReport() {
       if (res.success) setAiReply(res.data.reply);
       else setError(res.error.message);
     } catch {
-      setError("Could not reach the server. Check your connection.");
+      setError(t("report.connectionError"));
     } finally {
       setLoading(false);
     }
-  }, [transcript]);
+  }, [transcript, t]);
 
   const toggle = () => {
     if (recording) stopRecording();
@@ -468,7 +471,7 @@ function VoiceReport() {
               </AnimatePresence>
               <button
                 onClick={toggle}
-                aria-label={recording ? "Stop recording" : "Start recording"}
+                aria-label={recording ? t("report.recording") : t("report.tapMic")}
                 className={cn(
                   "relative flex h-32 w-32 items-center justify-center rounded-full text-white shadow-[var(--shadow-elegant)] transition-all",
                   recording
@@ -486,21 +489,21 @@ function VoiceReport() {
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {recording
-                  ? "Recording… tap to stop"
+                  ? t("report.recording")
                   : transcript
-                    ? "Recording captured"
-                    : "Tap the microphone to start"}
+                    ? t("report.recordingCaptured")
+                    : t("report.tapMic")}
               </p>
               {!hasSpeechApi && !recording && (
                 <p className="mt-1 text-xs text-muted-foreground">
-                  (No speech API — type transcript below)
+                  {t("report.noSpeechApi")}
                 </p>
               )}
             </div>
 
             {recording && (
               <StatusBadge variant="danger" pulse>
-                LIVE
+                {t("report.liveTag")}
               </StatusBadge>
             )}
 
@@ -510,7 +513,7 @@ function VoiceReport() {
                 <Textarea
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
-                  placeholder="Voice transcript will appear here. You can also type directly."
+                  placeholder={t("report.transcriptPlaceholder")}
                   className="min-h-[100px] resize-none text-sm"
                 />
                 {!recording && transcript && !aiReply && (
@@ -523,7 +526,7 @@ function VoiceReport() {
                         if (res.success) setAiReply(res.data.reply);
                         else setError(res.error.message);
                       } catch {
-                        setError("Could not reach the server.");
+                        setError(t("report.connectionError"));
                       } finally {
                         setLoading(false);
                       }
@@ -536,7 +539,7 @@ function VoiceReport() {
                     ) : (
                       <Sparkles className="mr-2 h-4 w-4" />
                     )}
-                    {loading ? "Analysing…" : "Analyse with AI"}
+                    {loading ? t("report.analysing") : t("report.analyseWithAI")}
                   </Button>
                 )}
               </div>
@@ -546,16 +549,16 @@ function VoiceReport() {
 
         <div className="flex flex-col gap-6">
           {transcript && (
-            <InfoCard icon={<Type className="h-5 w-5" />} title="Transcript" accent="primary">
+            <InfoCard icon={<Type className="h-5 w-5" />} title={t("report.transcript")} accent="primary">
               <p className="text-sm leading-relaxed text-foreground">{transcript}</p>
-              <p className="pt-2 text-xs text-muted-foreground">Auto-detected language</p>
+              <p className="pt-2 text-xs text-muted-foreground">{t("report.autoLang")}</p>
             </InfoCard>
           )}
           <AiReplyCard
             loading={loading}
             reply={aiReply}
             error={error}
-            emptyLabel="Record and stop to get an AI emergency summary."
+            emptyLabel={t("report.recordPrompt")}
           />
           <SosButton disabled={!hasResult} onClick={() => setSosOpen(true)} />
         </div>
@@ -575,6 +578,7 @@ function VoiceReport() {
 const MAX_CHARS = 1000;
 
 function TextReport() {
+  const { t } = useLanguage();
   const [text, setText] = useState("");
   const [aiReply, setAiReply] = useState("");
   const [loading, setLoading] = useState(false);
@@ -593,7 +597,7 @@ function TextReport() {
       if (res.success) setAiReply(res.data.reply);
       else setError(res.error.message);
     } catch {
-      setError("Could not reach the server. Check your connection.");
+      setError(t("report.connectionError"));
     } finally {
       setLoading(false);
     }
@@ -605,7 +609,7 @@ function TextReport() {
         <Panel>
           <div className="flex flex-col gap-3">
             <label htmlFor="text-report" className="text-sm font-medium">
-              Describe the emergency
+              {t("report.describeEmergency")}
             </label>
             <Textarea
               id="text-report"
@@ -614,11 +618,11 @@ function TextReport() {
                 setText(e.target.value.slice(0, MAX_CHARS));
                 if (aiReply) setAiReply("");
               }}
-              placeholder="Where are you? How high is the water? How many people are with you? Any injuries or medical needs?"
+              placeholder={t("report.describePlaceholder")}
               className="min-h-[240px] resize-none text-base"
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Include location, water level, and number of people.</span>
+              <span>{t("report.textHint")}</span>
               <span className={cn(text.length > MAX_CHARS * 0.9 && "text-warning")}>
                 {text.length} / {MAX_CHARS}
               </span>
@@ -633,7 +637,7 @@ function TextReport() {
               ) : (
                 <Sparkles className="mr-2 h-4 w-4" />
               )}
-              {loading ? "Generating…" : "Generate Summary"}
+              {loading ? t("report.generating") : t("report.generateSummary")}
             </Button>
           </div>
         </Panel>
@@ -643,7 +647,7 @@ function TextReport() {
             loading={loading}
             reply={aiReply}
             error={error}
-            emptyLabel="AI-generated emergency summary will appear here."
+            emptyLabel={t("report.aiSummaryAppears")}
           />
           <SosButton disabled={!aiReply} onClick={() => setSosOpen(true)} />
         </div>
@@ -661,6 +665,7 @@ function TextReport() {
 /* ─── Photo Report ──────────────────────────────────────────────────────────── */
 
 function PhotoReport() {
+  const { t } = useLanguage();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -684,7 +689,7 @@ function PhotoReport() {
       if (res.success) setAnalysis(res.data.analysis);
       else setError(res.error.message);
     } catch {
-      setError("Could not analyse the image. Check your connection.");
+      setError(t("report.imageConnectionError"));
     } finally {
       setLoading(false);
     }
@@ -730,9 +735,9 @@ function PhotoReport() {
                 <Upload className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-base font-medium">Drop a flood photo here</p>
+                <p className="text-base font-medium">{t("report.dropPhoto")}</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  or click to browse — JPG or PNG, up to 10 MB
+                  {t("report.dropPhotoSub")}
                 </p>
               </div>
               <input
@@ -750,7 +755,7 @@ function PhotoReport() {
                 <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm">
                   <div className="flex flex-col items-center gap-2">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <p className="text-sm font-medium text-foreground">Analysing image…</p>
+                    <p className="text-sm font-medium text-foreground">{t("report.analysingImage")}</p>
                   </div>
                 </div>
               )}
@@ -775,7 +780,7 @@ function PhotoReport() {
               variant="outline"
             >
               <Sparkles className="mr-2 h-4 w-4" />
-              Retry analysis
+              {t("report.retryAnalysis")}
             </Button>
           )}
         </Panel>
@@ -783,22 +788,22 @@ function PhotoReport() {
         <div className="flex flex-col gap-6">
           <InfoCard
             icon={<Waves className="h-5 w-5" />}
-            title="Flood Risk Assessment"
+            title={t("report.floodRisk")}
             accent="info"
             empty={!analysis && !loading}
-            emptyLabel={loading ? "Analysing…" : "Upload a photo to see the AI assessment."}
+            emptyLabel={loading ? t("report.analysingImage") : t("report.uploadPhoto")}
             loading={loading}
           >
             {analysis && (
               <>
                 {analysis.waterLevel && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Est. water level</span>
+                    <span className="text-sm text-muted-foreground">{t("report.waterLevel")}</span>
                     <span className="text-sm font-medium">{analysis.waterLevel}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Severity</span>
+                  <span className="text-sm text-muted-foreground">{t("report.severity")}</span>
                   <StatusBadge
                     variant={severityVariant(analysis.severity)}
                     pulse={["critical", "severe"].includes((analysis.severity ?? "").toLowerCase())}
@@ -809,7 +814,7 @@ function PhotoReport() {
                 {analysis.immediateRisks && analysis.immediateRisks.length > 0 && (
                   <div className="pt-1">
                     <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                      Immediate risks
+                      {t("report.immediateRisks")}
                     </p>
                     <ul className="mt-1 space-y-0.5">
                       {analysis.immediateRisks.map((r) => (
@@ -824,7 +829,7 @@ function PhotoReport() {
                 {analysis.callEmergency && (
                   <div className="mt-1 flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
                     <Phone className="h-4 w-4 shrink-0" />
-                    {analysis.callEmergencyReason ?? "Call 112 immediately"}
+                    {analysis.callEmergencyReason ?? t("report.call112Now")}
                   </div>
                 )}
                 <p className="pt-1 text-xs text-muted-foreground">{analysis.summary}</p>
@@ -834,10 +839,10 @@ function PhotoReport() {
 
           <InfoCard
             icon={<ShieldAlert className="h-5 w-5" />}
-            title="Recommended Action"
+            title={t("report.recommendedAction")}
             accent="warning"
             empty={!analysis && !loading}
-            emptyLabel={loading ? "Generating advice…" : "Awaiting image analysis."}
+            emptyLabel={loading ? t("report.generatingAdvice") : t("report.awaitingAnalysis")}
             loading={loading}
           >
             {(analysis?.recommendedActions ?? analysis?.rescueAdvice) && (
@@ -932,10 +937,11 @@ function AiReplyCard({
   error: string;
   emptyLabel: string;
 }) {
+  const { t } = useLanguage();
   return (
     <InfoCard
       icon={<Sparkles className="h-5 w-5" />}
-      title="AI Summary"
+      title={t("report.aiSummary")}
       accent="info"
       empty={!reply && !loading && !error}
       emptyLabel={emptyLabel}
@@ -957,6 +963,7 @@ function SosButton({
   disabled?: boolean;
   onClick: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <Button
       size="lg"
@@ -965,7 +972,7 @@ function SosButton({
       className="h-14 w-full bg-destructive text-destructive-foreground hover:bg-destructive/90 disabled:opacity-50"
     >
       <Siren className="mr-2 h-5 w-5" />
-      Generate SOS
+      {t("common.generateSOS")}
     </Button>
   );
 }

@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import type { Alert, Severity, SourceType } from "@/lib/types";
+import { useLanguage } from "@/lib/language-context";
 
 export const Route = createFileRoute("/alerts")({
   head: () => ({
@@ -48,28 +49,24 @@ export const Route = createFileRoute("/alerts")({
 
 const SEVERITY_META: Record<
   Severity,
-  { label: string; badge: "danger" | "warning" | "info" | "muted"; ring: string; dot: string }
+  { badge: "danger" | "warning" | "info" | "muted"; ring: string; dot: string }
 > = {
   critical: {
-    label: "Critical",
     badge: "danger",
     ring: "ring-destructive/30 border-l-destructive",
     dot: "bg-destructive",
   },
   high: {
-    label: "High",
     badge: "warning",
     ring: "ring-warning/30 border-l-warning",
     dot: "bg-warning",
   },
   moderate: {
-    label: "Moderate",
     badge: "info",
     ring: "ring-info/30 border-l-info",
     dot: "bg-info",
   },
   advisory: {
-    label: "Advisory",
     badge: "muted",
     ring: "ring-border border-l-muted-foreground/40",
     dot: "bg-muted-foreground",
@@ -78,15 +75,15 @@ const SEVERITY_META: Record<
 
 const SEVERITY_ORDER: Severity[] = ["critical", "high", "moderate", "advisory"];
 
-function formatRelative(iso: string) {
+function formatRelative(iso: string, t: (key: string) => string) {
   const diff = Math.max(0, Date.now() - new Date(iso).getTime());
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins} min ago`;
+  if (mins < 1) return t("alerts.justNow");
+  if (mins < 60) return `${mins} ${t("alerts.minAgo")}`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hr${hrs === 1 ? "" : "s"} ago`;
+  if (hrs < 24) return `${hrs} ${hrs === 1 ? t("alerts.hrAgo") : t("alerts.hrsAgo")}`;
   const days = Math.floor(hrs / 24);
-  return `${days} day${days === 1 ? "" : "s"} ago`;
+  return `${days} ${days === 1 ? t("alerts.dayAgo") : t("alerts.daysAgo")}`;
 }
 
 function formatFullTime(iso: string) {
@@ -112,6 +109,7 @@ function sourceIcon(type: SourceType) {
 }
 
 function AlertsPage() {
+  const { t } = useLanguage();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -132,7 +130,7 @@ function AlertsPage() {
         setFetchError(res.error.message);
       }
     } catch {
-      setFetchError("Could not load alerts. Check your connection.");
+      setFetchError(t("common.noConnection"));
     } finally {
       setLoading(false);
     }
@@ -178,7 +176,7 @@ function AlertsPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Loading flood alerts…</p>
+          <p className="text-sm text-muted-foreground">{t("alerts.loadingMsg")}</p>
         </div>
       </div>
     );
@@ -192,7 +190,7 @@ function AlertsPage() {
           <p className="mt-3 text-sm font-medium text-foreground">{fetchError}</p>
           <Button onClick={load} variant="outline" className="mt-4">
             <RefreshCw className="mr-2 h-4 w-4" />
-            Retry
+            {t("common.retry")}
           </Button>
         </div>
       </div>
@@ -202,9 +200,9 @@ function AlertsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader
-        eyebrow="Live bulletins"
-        title="Flood Alerts"
-        description="Consolidated warnings from IMD, CWC, TSDMA, NDRF and district control rooms across Telangana. Sorted by severity."
+        eyebrow={t("alerts.eyebrow")}
+        title={t("alerts.title")}
+        description={t("alerts.description")}
       />
 
       {/* Severity summary */}
@@ -216,11 +214,11 @@ function AlertsPage() {
               <div className="flex items-center gap-2">
                 <span className={cn("h-2.5 w-2.5 rounded-full", meta.dot)} />
                 <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  {meta.label}
+                  {t(`alerts.${sev}`)}
                 </span>
               </div>
               <p className="mt-2 text-2xl font-bold tracking-tight">{counts[sev]}</p>
-              <p className="text-xs text-muted-foreground">active bulletins</p>
+              <p className="text-xs text-muted-foreground">{t("alerts.active")}</p>
             </div>
           );
         })}
@@ -233,7 +231,7 @@ function AlertsPage() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by title, district, mandal, river or source…"
+            placeholder={t("alerts.searchPlaceholder")}
             className="pl-9"
           />
         </div>
@@ -241,10 +239,10 @@ function AlertsPage() {
           <Select value={district} onValueChange={setDistrict}>
             <SelectTrigger className="w-full min-w-[10rem] md:w-48">
               <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="District" />
+              <SelectValue placeholder={t("alerts.allDistricts")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All districts</SelectItem>
+              <SelectItem value="all">{t("common.allDistricts")}</SelectItem>
               {districts.map((d) => (
                 <SelectItem key={d} value={d}>{d}</SelectItem>
               ))}
@@ -254,12 +252,12 @@ function AlertsPage() {
           <Select value={severity} onValueChange={setSeverity}>
             <SelectTrigger className="w-full min-w-[10rem] md:w-44">
               <AlertTriangle className="mr-2 h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="Severity" />
+              <SelectValue placeholder={t("alerts.allSeverities")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All severities</SelectItem>
+              <SelectItem value="all">{t("common.allSeverities")}</SelectItem>
               {SEVERITY_ORDER.map((s) => (
-                <SelectItem key={s} value={s}>{SEVERITY_META[s].label}</SelectItem>
+                <SelectItem key={s} value={s}>{t(`alerts.${s}`)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -269,15 +267,17 @@ function AlertsPage() {
       {/* Alert list */}
       <div className="mt-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold tracking-tight">
-          {filtered.length} bulletin{filtered.length === 1 ? "" : "s"}
+          {filtered.length} {filtered.length === 1 ? t("alerts.bulletin") : t("alerts.bulletins")}
         </h2>
         <div className="flex items-center gap-3">
           <p className="text-xs text-muted-foreground">
-            {lastRefreshed ? `Refreshed ${formatRelative(lastRefreshed.toISOString())}` : ""}
+            {lastRefreshed
+              ? `${t("alerts.refreshedAgo")} ${formatRelative(lastRefreshed.toISOString(), t)}`
+              : ""}
           </p>
           <Button variant="ghost" size="sm" onClick={load} className="gap-1.5 text-xs">
             <RefreshCw className="h-3.5 w-3.5" />
-            Refresh
+            {t("common.refresh")}
           </Button>
         </div>
       </div>
@@ -287,7 +287,7 @@ function AlertsPage() {
           <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
             <Megaphone className="mx-auto h-8 w-8 text-muted-foreground" />
             <p className="mt-3 text-sm text-muted-foreground">
-              No bulletins match your filters. Try clearing the district or severity.
+              {t("alerts.noMatch")}
             </p>
           </div>
         ) : (
@@ -299,6 +299,7 @@ function AlertsPage() {
 }
 
 function AlertCard({ alert, index }: { alert: Alert; index: number }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const meta = SEVERITY_META[alert.severity];
   const SourceIcon = sourceIcon(alert.sourceType);
@@ -318,7 +319,7 @@ function AlertCard({ alert, index }: { alert: Alert; index: number }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <StatusBadge variant={meta.badge} pulse={alert.severity === "critical"}>
-              {meta.label}
+              {t(`alerts.${alert.severity}`)}
             </StatusBadge>
             <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
               <MapPin className="h-3 w-3" />
@@ -341,26 +342,26 @@ function AlertCard({ alert, index }: { alert: Alert; index: number }) {
             </span>
             <span className="inline-flex items-center gap-1.5" title={formatFullTime(alert.publishedAt)}>
               <Clock className="h-3.5 w-3.5" />
-              {formatRelative(alert.publishedAt)} · {formatFullTime(alert.publishedAt)} IST
+              {formatRelative(alert.publishedAt, t)} · {formatFullTime(alert.publishedAt)} IST
             </span>
           </div>
         </div>
       </div>
 
-      {/* AI summary */}
+      {/* AI summary — content generated by backend in user's language, label is UI */}
       <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-primary">
           <Sparkles className="h-3.5 w-3.5" />
-          AI summary
+          {t("alerts.aiSummary")}
         </div>
         <p className="mt-2 text-sm leading-relaxed text-foreground">{alert.aiSummary}</p>
       </div>
 
-      {/* Safety instructions */}
+      {/* Safety instructions — content from backend */}
       <div className="mt-4">
         <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           <ListChecks className="h-3.5 w-3.5" />
-          Safety instructions
+          {t("alerts.safetyInstructions")}
         </div>
         <ul className="mt-2 space-y-1.5">
           {alert.instructions.map((ins) => (
@@ -384,10 +385,10 @@ function AlertCard({ alert, index }: { alert: Alert; index: number }) {
           >
             <div className="mt-4 rounded-xl border border-border bg-secondary/40 p-4">
               <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Full bulletin
+                {t("alerts.fullBulletin")}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-foreground">{alert.details}</p>
-              <p className="mt-3 text-xs text-muted-foreground">Bulletin ID: {alert.id}</p>
+              <p className="mt-3 text-xs text-muted-foreground">{t("alerts.bulletinId")}: {alert.id}</p>
             </div>
           </motion.div>
         )}
@@ -400,11 +401,11 @@ function AlertCard({ alert, index }: { alert: Alert; index: number }) {
           onClick={() => setOpen((v) => !v)}
           className="gap-1.5 text-primary hover:text-primary"
         >
-          {open ? "Hide details" : "Show full bulletin"}
+          {open ? t("alerts.hideBulletin") : t("alerts.showBulletin")}
           <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
         </Button>
         <a href="tel:1077" className="text-xs font-medium text-muted-foreground hover:text-primary">
-          District helpline · 1077
+          {t("alerts.helpline")}
         </a>
       </div>
     </motion.article>

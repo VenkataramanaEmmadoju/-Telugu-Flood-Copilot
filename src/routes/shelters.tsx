@@ -29,6 +29,7 @@ import { SectionHeader } from "@/components/section-header";
 import { StatusBadge } from "@/components/status-badge";
 import { api } from "@/lib/api";
 import type { Shelter } from "@/lib/types";
+import { useLanguage } from "@/lib/language-context";
 
 export const Route = createFileRoute("/shelters")({
   head: () => ({
@@ -50,13 +51,14 @@ export const Route = createFileRoute("/shelters")({
   component: SheltersPage,
 });
 
-function statusBadge(status: Shelter["status"]) {
-  if (status === "open") return { label: "Open", variant: "success" as const };
-  if (status === "filling") return { label: "Filling Up", variant: "warning" as const };
-  return { label: "Full", variant: "danger" as const };
+function statusBadge(status: Shelter["status"], t: (key: string) => string) {
+  if (status === "open") return { label: t("shelters.open"), variant: "success" as const };
+  if (status === "filling") return { label: t("shelters.filling"), variant: "warning" as const };
+  return { label: t("shelters.full"), variant: "danger" as const };
 }
 
 function SheltersPage() {
+  const { t } = useLanguage();
   const [shelters, setShelters] = useState<Shelter[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -77,7 +79,7 @@ function SheltersPage() {
         setFetchError(res.error.message);
       }
     } catch {
-      setFetchError("Could not load shelters. Check your connection.");
+      setFetchError(t("common.noConnection"));
     } finally {
       setLoading(false);
     }
@@ -130,7 +132,7 @@ function SheltersPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Loading shelters…</p>
+          <p className="text-sm text-muted-foreground">{t("shelters.loadingMsg")}</p>
         </div>
       </div>
     );
@@ -144,7 +146,7 @@ function SheltersPage() {
           <p className="mt-3 text-sm font-medium text-foreground">{fetchError}</p>
           <Button onClick={load} variant="outline" className="mt-4">
             <RefreshCw className="mr-2 h-4 w-4" />
-            Retry
+            {t("common.retry")}
           </Button>
         </div>
       </div>
@@ -156,36 +158,36 @@ function SheltersPage() {
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-subtle)" }} />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <SectionHeader
-          eyebrow="Nearby Relief"
-          title="Shelter Finder"
-          description="Offline-first directory of relief camps, schools, and community halls across rural Telangana."
+          eyebrow={t("shelters.eyebrow")}
+          title={t("shelters.title")}
+          description={t("shelters.description")}
         />
 
         {/* Summary cards */}
         <div className="mt-6 grid gap-3 sm:mt-8 sm:gap-4 sm:grid-cols-3">
           <SummaryCard
             icon={Home}
-            label="Available Shelters"
+            label={t("shelters.available")}
             value={`${summary.availableCount}`}
-            hint={`${filtered.length} total in view`}
+            hint={`${filtered.length} ${t("shelters.totalInView")}`}
             tone="emerald"
           />
           <SummaryCard
             icon={Users}
-            label="Current Capacity"
+            label={t("shelters.currentCapacity")}
             value={`${summary.totalOccupied.toLocaleString()} / ${summary.totalCap.toLocaleString()}`}
-            hint={`${summary.utilization}% occupied`}
+            hint={`${summary.utilization}% ${t("shelters.occupied")}`}
             tone="primary"
             progress={summary.utilization}
           />
           <SummaryCard
             icon={Compass}
-            label="Nearest Shelter"
+            label={t("shelters.nearestShelter")}
             value={summary.nearest?.name ?? "—"}
             hint={
               summary.nearest
                 ? `${summary.nearest.village} · ${summary.nearest.distanceKm} km`
-                : "No shelters match your filters"
+                : t("shelters.noMatch")
             }
             tone="amber"
           />
@@ -198,7 +200,7 @@ function SheltersPage() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by shelter, village, or district"
+              placeholder={t("shelters.searchPlaceholder")}
               className="pl-9"
             />
           </div>
@@ -207,10 +209,10 @@ function SheltersPage() {
             onValueChange={(v) => { setDistrict(v); setVillage("all"); }}
           >
             <SelectTrigger className="w-full sm:w-56">
-              <SelectValue placeholder="All districts" />
+              <SelectValue placeholder={t("common.allDistricts")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All districts</SelectItem>
+              <SelectItem value="all">{t("common.allDistricts")}</SelectItem>
               {districts.map((d) => (
                 <SelectItem key={d} value={d}>{d}</SelectItem>
               ))}
@@ -218,10 +220,10 @@ function SheltersPage() {
           </Select>
           <Select value={village} onValueChange={setVillage}>
             <SelectTrigger className="w-full sm:w-56">
-              <SelectValue placeholder="All villages" />
+              <SelectValue placeholder={t("common.allVillages")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All villages</SelectItem>
+              <SelectItem value="all">{t("common.allVillages")}</SelectItem>
               {villages.map((v) => (
                 <SelectItem key={v} value={v}>{v}</SelectItem>
               ))}
@@ -239,9 +241,9 @@ function SheltersPage() {
 
           <div className="mt-4 sm:mt-6">
             <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-semibold text-foreground">Nearest Shelters</h2>
+              <h2 className="text-lg font-semibold text-foreground">{t("shelters.nearestShelters")}</h2>
               <span className="text-xs text-muted-foreground">
-                {filtered.length} result{filtered.length === 1 ? "" : "s"}
+                {filtered.length} {filtered.length === 1 ? t("common.result") : t("common.results")}
               </span>
             </div>
 
@@ -250,10 +252,10 @@ function SheltersPage() {
                 <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-center sm:p-8">
                   <MapPin className="mx-auto h-6 w-6 text-muted-foreground" />
                   <p className="mt-2 text-sm font-medium text-foreground">
-                    No shelters match your filters
+                    {t("shelters.noMatch")}
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Try clearing the search or picking a different district.
+                    {t("shelters.clearFilters")}
                   </p>
                 </div>
               )}
@@ -333,6 +335,7 @@ function MapPlaceholder({
   selectedId?: string;
   onSelect: (id: string) => void;
 }) {
+  const { t } = useLanguage();
   const pins = shelters.slice(0, 9).map((s, i) => ({
     shelter: s,
     left: 12 + ((i * 73) % 76),
@@ -395,7 +398,7 @@ function MapPlaceholder({
             {(() => {
               const sel = shelters.find((s) => s.id === selectedId);
               if (!sel) return null;
-              const badge = statusBadge(sel.status);
+              const badge = statusBadge(sel.status, t);
               return (
                 <>
                   <div className="flex items-center justify-between gap-2">
@@ -407,7 +410,7 @@ function MapPlaceholder({
                     <span className="truncate">{sel.village}, {sel.district}</span>
                   </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    {sel.distanceKm} km away · {Math.max(0, sel.capacity - sel.occupied)} beds free
+                    {sel.distanceKm} km · {Math.max(0, sel.capacity - sel.occupied)} {t("common.bedsFree")}
                   </p>
                 </>
               );
@@ -425,16 +428,16 @@ function MapPlaceholder({
         <div className="absolute left-3 top-3 rounded-full bg-card/90 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
           <span className="inline-flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            Offline map preview
+            {t("shelters.offlineMap")}
           </span>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-4 border-t border-border bg-card/60 px-4 py-3 text-xs text-muted-foreground">
-        <LegendDot color="bg-emerald-500" label="Open" />
-        <LegendDot color="bg-amber-500" label="Filling up" />
-        <LegendDot color="bg-destructive" label="Full" />
-        <span className="ml-auto hidden sm:inline">Tap a pin to view details</span>
+        <LegendDot color="bg-emerald-500" label={t("shelters.open")} />
+        <LegendDot color="bg-amber-500" label={t("shelters.filling")} />
+        <LegendDot color="bg-destructive" label={t("shelters.full")} />
+        <span className="ml-auto hidden sm:inline">{t("shelters.tapPin")}</span>
       </div>
     </div>
   );
@@ -468,7 +471,8 @@ function ShelterCard({
   isSelected: boolean;
   onSelect: () => void;
 }) {
-  const badge = statusBadge(shelter.status);
+  const { t } = useLanguage();
+  const badge = statusBadge(shelter.status, t);
   const free = Math.max(0, shelter.capacity - shelter.occupied);
   const utilization = Math.round((shelter.occupied / shelter.capacity) * 100);
 
@@ -495,9 +499,9 @@ function ShelterCard({
       </div>
 
       <div className="mt-3 grid grid-cols-3 gap-2 text-sm sm:mt-4 sm:gap-3">
-        <Stat icon={Navigation} label="Distance" value={`${shelter.distanceKm} km`} />
-        <Stat icon={Users} label="Capacity" value={`${free} / ${shelter.capacity}`} sub="beds free" />
-        <Stat icon={Phone} label="Contact" value={shelter.phone} mono />
+        <Stat icon={Navigation} label={t("common.distance")} value={`${shelter.distanceKm} km`} />
+        <Stat icon={Users} label={t("common.capacity")} value={`${free} / ${shelter.capacity}`} sub={t("common.bedsFree")} />
+        <Stat icon={Phone} label={t("common.contact")} value={shelter.phone} mono />
       </div>
 
       <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary sm:mt-4">
@@ -519,13 +523,13 @@ function ShelterCard({
             rel="noreferrer"
           >
             <Navigation className="mr-1 h-4 w-4" />
-            Directions
+            {t("common.directions")}
           </a>
         </Button>
         <Button asChild className="flex-1 rounded-full" onClick={(e) => e.stopPropagation()}>
           <a href={`tel:${shelter.phone.replace(/\s+/g, "")}`}>
             <Phone className="mr-1 h-4 w-4" />
-            Call
+            {t("common.call")}
           </a>
         </Button>
       </div>
