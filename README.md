@@ -99,7 +99,7 @@ Text ─────► AI Processing ◄──── Image
 
 ## 🚨 Report Emergency
 
-![Report](assets/report.png)
+![Report](assets/report-emergency.png)
 
 ---
 
@@ -117,13 +117,13 @@ Text ─────► AI Processing ◄──── Image
 
 ## 🚨 Flood Alerts
 
-![Alerts](assets/alerts.png)
+![Alerts](assets/flood-alerts.png)
 
 ---
 
 ## 🌐 Multilingual Support
 
-![Language](assets/language.png)
+![Language](assets/multilingual.png)
 
 ---
 
